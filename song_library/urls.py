@@ -28,6 +28,8 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='profiles/logout.html'), name='logout'),
     path('register/', profiles_views.register, name='register'),
     path('profile/', profiles_views.profile, name='profile'),
+    path('new_song/', profiles_views.new_song, name='new_song'),
+    path('song_added', profiles_views.song_added, name='song_added'),
     path("admin/", admin.site.urls),
 ]
 

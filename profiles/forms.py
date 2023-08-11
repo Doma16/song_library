@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import Profile
+from library.models import Song
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -22,3 +23,15 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['image']
+
+class NewSongLinkForm(forms.ModelForm):
+
+    class Meta:
+        model = Song
+        fields = ['link']
+
+class NewSongNoLinkForm(forms.ModelForm):
+
+    class Meta:
+        model = Song
+        fields= ['title', 'author', 'lyrics']

@@ -12,7 +12,7 @@ class Song(models.Model):
     author = models.CharField(max_length=100)
     link = models.URLField(blank=True)
     image = models.ImageField(default='default_song.png', upload_to='song_pics')
-    content = models.TextField()
+    content = models.TextField(name='lyrics')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
