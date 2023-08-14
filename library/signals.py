@@ -24,9 +24,13 @@ def update_song_image(sender, instance:Song, **kwargs):
 
         sng = genius.search_song(title=song_title)
 
-        img_lyr = sng.lyrics
-        img_url = sng.song_art_image_thumbnail_url
-
+        if sng is not None:
+            if check_artist(yt.author, sng.artist, song_title, sng.title):
+                img_lyr = sng.lyrics
+                img_url = sng.song_art_image_thumbnail_url
+        else:
+            img_lyr = f'[no lyrics for {song_title}]'
+        
         r = requests.get(img_url, stream=True)
         if r.status_code == 200:
             r.raw.decode_content = True
@@ -47,3 +51,21 @@ def update_song_image(sender, instance:Song, **kwargs):
                 instance.image.save(name=name, content=content)
             finally:
                 f.close()
+
+
+def check_artist(aut1:str, aut2:str, tit1:str, tit2:str):
+
+    aut1 = [ x for x in aut1 if x.isalpha() or x.isnumeric()]
+    aut2 = [ x for x in aut2 if x.isalpha() or x.isnumeric()]
+    tit1 = [ x for x in tit1 if x.isalpha() or x.isnumeric()]
+    tit2 = [ x for x in tit2 if x.isalpha() or x.isnumeric()]
+
+    aut1 = ''.join(aut1).lower()
+    aut2 = ''.join(aut2).lower()
+    tit1 = ''.join(tit1).lower()
+    tit2 = ''.join(tit2).lower()
+
+    if aut1 == aut2:
+        if tit1 == tit2:
+            return True
+    return
