@@ -12,7 +12,7 @@
             <a class="text-warning mr-2" href="{{ song.link }}">song link</a>
             {% endif %}
         </div>
-        <h2><a class="article-title" href="#">{{ song.title }}</a></h2>
+        <h2><a class="article-title" href="{% url 'song' song.id %}">{{ song.title }}</a></h2>
         <div class="song-image">
             <img class="rounded-circle account-img" src="{{ song.image.url }}">
         </div>
