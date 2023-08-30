@@ -24,12 +24,12 @@ def update_song_image(sender, instance:Song, **kwargs):
 
         sng = genius.search_song(title=song_title)
 
+        img_lyr = f'[no lyrics for {song_title}]'
         if sng is not None:
+
             if check_artist(yt.author, sng.artist, song_title, sng.title):
                 img_lyr = sng.lyrics
                 img_url = sng.song_art_image_thumbnail_url
-        else:
-            img_lyr = f'[no lyrics for {song_title}]'
         
         r = requests.get(img_url, stream=True)
         if r.status_code == 200:
@@ -55,17 +55,25 @@ def update_song_image(sender, instance:Song, **kwargs):
 
 def check_artist(aut1:str, aut2:str, tit1:str, tit2:str):
 
-    aut1 = [ x for x in aut1 if x.isalpha() or x.isnumeric()]
-    aut2 = [ x for x in aut2 if x.isalpha() or x.isnumeric()]
-    tit1 = [ x for x in tit1 if x.isalpha() or x.isnumeric()]
-    tit2 = [ x for x in tit2 if x.isalpha() or x.isnumeric()]
+    aut1 = [ x.lower() for x in aut1 if x.isalpha() or x.isnumeric()]
+    aut2 = [ x.lower() for x in aut2 if x.isalpha() or x.isnumeric()]
+    tit1 = [ x.lower() for x in tit1 if x.isalpha() or x.isnumeric()]
+    tit2 = [ x.lower() for x in tit2 if x.isalpha() or x.isnumeric()]
 
-    aut1 = ''.join(aut1).lower()
-    aut2 = ''.join(aut2).lower()
-    tit1 = ''.join(tit1).lower()
-    tit2 = ''.join(tit2).lower()
+    word_len = 5
+    if len(tit1) >= word_len:
+        words = [''.join(tit1[i:i+word_len]) for i in range(0,len(tit1)-word_len,1)]
+        tit2 = ''.join(tit2)
 
-    if aut1 == aut2:
+        for word in words:
+            if tit2.find(word) > -1:
+                return True 
+    else:
+        tit1 = ''.join(tit1)
+        tit2 = ''.join(tit2)
+
         if tit1 == tit2:
             return True
-    return
+        return False
+
+    return False
