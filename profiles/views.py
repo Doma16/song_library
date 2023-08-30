@@ -48,15 +48,15 @@ def new_song(request):
     if request.method == 'POST':
         l_form = NewSongLinkForm(request.POST)
         nl_form = NewSongNoLinkForm(request.POST)
+        user = request.user
 
-        if l_form.is_valid():
+        if l_form.is_valid() and 'link' in request.POST.keys():
             link = request.POST['link']
             yt = YouTube(link)
 
             title = yt.vid_info['videoDetails']['title']
             author = yt.vid_info['videoDetails']['author']
             content = ''
-            user = request.user
 
             s = Song(title=title, author=author, link=link, user=user)
             s.lyrics = content
@@ -65,8 +65,10 @@ def new_song(request):
             return redirect('song_added')
 
         elif nl_form.is_valid():
-            breakpoint()
+            s = Song(title=request.POST['title'], author=request.POST['author'], lyrics=request.POST['lyrics'], user=user)
+            s.save()
             
+            return redirect('song_added')
     else:
         l_form = NewSongLinkForm()
         nl_form = NewSongNoLinkForm()
